@@ -1,16 +1,16 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import logo from '../../public/logo.svg';
-import styles from '../../styles/home.module.scss';
-import { Button } from "../components/ui/Button/Index";
-import { Input } from "../components/ui/Input";
+import logo from '../../../public/logo.svg';
+import styles from '../../../styles/home.module.scss';
+import { Button } from "../../components/ui/Button/Index";
+import { Input } from "../../components/ui/Input/index";
 
-export default function Home() {
+export default function Signup() {
   return (
     <>
       <Head>
-        <title>SujeitoPizza - Faça seu login</title>
+        <title>Faça seu cadastro agora!</title>
       </Head>
 
 
@@ -18,7 +18,9 @@ export default function Home() {
         <Image src={logo} alt="Logo sujeito pizzaria" />
         
         <div className={styles.login}>
+          <h1>Criando sua conta</h1>
           <form>
+            <Input placeholder="Digite seu nome" type="text" />
             <Input placeholder="Digite seu email" type="email" />
             <Input placeholder="Digite sua senha" type="password" />
 
@@ -27,11 +29,11 @@ export default function Home() {
               type="submit"
               loading={false}
             >
-              Acessar
+              Cadastrar
             </Button>
           </form>
-          <Link href="/signup" className={styles.text}>
-            Não possui uma conta? Cadastre-se
+          <Link href="/" className={styles.text}>
+            Já possui uma conta? Faça login
           </Link>
         </div>
       </div>
