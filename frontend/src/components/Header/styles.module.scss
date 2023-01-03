@@ -28,7 +28,7 @@
     display: inline-block;
     position: relative;
     transition: color .7s;
-
+    font-weight: bold;
     &+a {
       margin-left: 2rem;
     }

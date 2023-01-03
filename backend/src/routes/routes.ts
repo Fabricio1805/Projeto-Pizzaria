@@ -18,6 +18,7 @@ import CancelItemController from '../controllers/order/CancelItemController';
 import SendOrderController from '../controllers/order/SendOrderController';
 import DetailOrderController from '../controllers/order/DetailOrderController';
 import FinishOrderController from '../controllers/order/FinishOrderController';
+import DetailuserController from '../controllers/user/DetailUserController';
 
 const router = Router();
 
@@ -31,6 +32,7 @@ router.post('/session', new AuthUserController().handle);
 
 router.use(Authenticate);
 
+router.get('/me', new DetailuserController().handle);
 
 router.post('/category', new CreateCategoryController().handle);
 

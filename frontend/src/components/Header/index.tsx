@@ -14,11 +14,14 @@ const Header = () => {
         </Link>
 
         <nav className={styles.menuNav}>
+          <Link href='/'>
+            Home
+          </Link>
           <Link href='/category'>
             Categoria
           </Link>
 
-          <Link href='/prodcut'>
+          <Link href='/product'>
             Produto
           </Link>
 

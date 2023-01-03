@@ -9,9 +9,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <AuthProvider>
       <Component {...pageProps} />
       <ToastContainer
-        autoClose={1000}
+        autoClose={700}
         position='bottom-center'
         theme='dark'
+        draggable
       />
     </AuthProvider>
   );
