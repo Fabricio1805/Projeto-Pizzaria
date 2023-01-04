@@ -23,7 +23,7 @@ const ModalOrder = ({ isOpen, onRequestClose, order ,handleFinish}: ModalOrderPr
       padding: '30px',
       transform: 'translate(-50%, -50%)',
       backgroundColor: '#1D1D2E',
-      borderRadius: '30px'
+      borderRadius: '9px'
     }
   };
   return (

@@ -114,7 +114,7 @@ const Dashboard = ({ ordersList }: OrdersProps) => {
               <section className={styles.orderItem} key={order.id}>
                 <button onClick={() => handleOpenModalView(order.id)}>
                   <div className={styles.tag} ></div>
-                  <span>
+                  <span className={styles.table}>
                     Mesa: {order.table}
                     {order.name && <span> - ( {order.name} )</span>}
                   </span>

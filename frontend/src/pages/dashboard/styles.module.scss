@@ -53,6 +53,14 @@
   border-radius: .5rem 0 0 .5rem;
   margin-right: 1rem;
 }
+.table {
+  font-weight: bold;
+  transition: transform .2s;
+}
+
+.table:hover {
+  transform: scale(1.3);
+}
 
 .emptyList {
   font-size: 1.2rem;
