@@ -29,6 +29,9 @@ router.post('/users', new CreateUserController().handle);
 
 router.post('/session', new AuthUserController().handle);
 
+router.get('/', (req, res) => {
+  res.send('sjsdakld');
+});
 
 router.use(Authenticate);
 

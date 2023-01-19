@@ -1,0 +1,55 @@
+version: "3.5"
+
+services:
+  api-node:
+    stdin_open: true
+    tty: true
+    build: .
+    container_name: server
+    env_file: .env
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/home/node/app
+    networks:
+      - app-network
+    depends_on:
+      - db-mysql
+    restart: always
+
+  db-mysql:
+    image: mysql:8.0.21
+    restart: always
+    container_name: MYSQL
+    environment:
+      MYSQL_DATABASE: "api"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+      TZ: "America/Sao_Paulo"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "api"
+    volumes:
+      - .:/usr/app/postgres
+networks:
+  app-network:
+    driver: 'bridge'
+volumes:
+  dbdata:
