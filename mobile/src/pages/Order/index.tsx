@@ -1,14 +1,17 @@
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Modal
 } from 'react-native';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { api } from '../../services/api';
+import ModalPicker from '../../components/ModalPicker';
 
 type RouteDetailParams = {
   Order: {
@@ -19,11 +22,33 @@ type RouteDetailParams = {
 
 type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
+export type CategoryProps = {
+  id: string;
+  name: string;
+}
 const Order = () => {
   const route = useRoute<OrderRouteProps>();
   const navigation = useNavigation();
-  console.log(route.params.order_id);
-  console.log(route.params.table);
+
+  const [category, setCategory] = useState<CategoryProps[] | []>([]);
+  const [categorySelected, setCategorySelected] = useState<CategoryProps>();
+
+  const [amount, setAmount] = useState('1');
+
+  const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
+
+  useEffect(() => {
+    async function loadInfo() {
+      await api.get('/categories').then(response => {
+        setCategory(response.data);
+        setCategorySelected(response.data[0]);
+      }).catch((error) => {
+        console.log(error);
+      });
+
+    }
+    loadInfo();
+  },[]);
 
   const handleCloseOrder = async () => {
     try {
@@ -38,6 +63,7 @@ const Order = () => {
       console.log('Erro ao cancelar pedido!'+err);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -47,9 +73,11 @@ const Order = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.input}>
-        <Text>Pizzas</Text>
-      </TouchableOpacity>
+      {category.length !== 0 && (
+        <TouchableOpacity style={styles.input} onPress={ () => setModalCategoryVisible(true)}>
+          <Text>{categorySelected?.name}</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.input}>
         <Text>Pizza de calumbresa</Text>
@@ -60,21 +88,35 @@ const Order = () => {
 
         <TextInput
           style={[styles.input, { width: '60%', textAlign: 'center' }]}
-          placeholder="1"
           placeholderTextColor="#1D1D2E"
           keyboardType="numeric"
+          value={amount}
+          onChangeText={setAmount}
         />
       </View>
 
       <View style={styles.actions}>
         <TouchableOpacity style={styles.buttonAdd}>
-          <Text style={[styles.buttonText,{color: '#FFF'}]}>+</Text>
+          <Text style={[styles.buttonText, { color: '#FFF' }]}>+</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Avançar</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        transparent={true}
+        visible={modalCategoryVisible}
+        animationType='fade'
+      >
+        <ModalPicker
+          handleCloseModal={() => setModalCategoryVisible(false)}
+          options={category}
+          selectedItem ={() => {}}
+        />
+      </Modal>
+
     </View>
   );
 };
