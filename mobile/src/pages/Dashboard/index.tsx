@@ -10,18 +10,27 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamsList } from '../../routes/app.routes';
+import { api } from '../../services/api';
+
 
 const Dashboard = () => {
   const [table, setTable] = useState('');
   const navigation = useNavigation<NativeStackNavigationProp<StackParamsList >>();
 
-  const openOrder = () => {
+  const openOrder = async () => {
     if (table === '') {
       return;
     }
-    navigation.navigate('Order',{table, order_id: 'dsadasd'});
-    
-  }
+
+    const response = await api.post('/order', {
+      table: Number(table),
+    });
+    //console.log(response.data);
+
+    navigation.navigate('Order', { table, order_id: response.data.id });
+    setTable('');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Novo Pedido</Text>
@@ -33,18 +42,18 @@ const Dashboard = () => {
         keyboardType='numeric'
         value={table}
         onChangeText={setTable}
-     />
+      />
 
       <TouchableOpacity
         style={styles.button}
         onPress={openOrder}
-      > 
+      >
         <Text style={styles.buttonText}>Abrir mesa</Text>
       </TouchableOpacity>
 
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +93,7 @@ const styles = StyleSheet.create({
     color: '#101026',
     fontWeight: 'bold'
   },
-})
+});
 
 
 
@@ -95,4 +104,4 @@ const styles = StyleSheet.create({
 
 
 
-export default Dashboard
+export default Dashboard;

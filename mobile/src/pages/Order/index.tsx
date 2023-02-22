@@ -6,10 +6,9 @@ import {
   TextInput,
 } from 'react-native';
 
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-
-import {api} from '../../services/api';
+import { api } from '../../services/api';
 
 type RouteDetailParams = {
   Order: {
@@ -22,12 +21,28 @@ type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
 const Order = () => {
   const route = useRoute<OrderRouteProps>();
+  const navigation = useNavigation();
+  console.log(route.params.order_id);
+  console.log(route.params.table);
 
+  const handleCloseOrder = async () => {
+    try {
+      await api.delete('/order', {
+        params: {
+          order_id: route.params.order_id,
+        },
+      });
+
+      navigation.goBack();
+    } catch(err) {
+      console.log('Erro ao cancelar pedido!'+err);
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Mesa {route.params.table}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleCloseOrder}>
           <Feather name="trash" size={26} color="#FF3F4b" />
         </TouchableOpacity>
       </View>
