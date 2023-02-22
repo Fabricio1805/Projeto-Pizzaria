@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { api } from '../../services/api';
 
 interface ItemProps {
   data: {
@@ -8,15 +9,20 @@ interface ItemProps {
     name: string;
     amount: string | number;
   };
+  deleteItem: (item_id: string) => void;
 }
-const ListItem = ({data}: ItemProps) => {
+const ListItem = ({ data,deleteItem }: ItemProps) => {
+
+  const handleCancelItem = async () => {
+    deleteItem(data.id);
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.item}>
-        {data.name} - {data.amount}
+        {data.amount} - {data.name}
       </Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleCancelItem}>
         <Feather name="trash" size={26} color="#FF3F4b" />
       </TouchableOpacity>
     </View>
