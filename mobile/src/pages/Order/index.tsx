@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Modal
+  Modal,
+  FlatList
 } from 'react-native';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
@@ -26,6 +27,19 @@ export type CategoryProps = {
   id: string;
   name: string;
 }
+
+type ProductProps = {
+  id: string;
+  name: string;
+}
+
+type ItemProps = {
+  id: string;
+  product_id: string;
+  name: string;
+  amount: string | number;
+}
+
 const Order = () => {
   const route = useRoute<OrderRouteProps>();
   const navigation = useNavigation();
@@ -34,8 +48,13 @@ const Order = () => {
   const [categorySelected, setCategorySelected] = useState<CategoryProps>();
 
   const [amount, setAmount] = useState('1');
+  const [items, setItems] = useState<ItemProps[] | []>([]);
 
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
+  const [products, setProducts] = useState<ProductProps[] | []>([]);
+  const [productSelected, setProductSelected] = useState<ProductProps | null>();
+  const [modalProductVisible, setModalProductVisible] = useState(false);
+
 
   useEffect(() => {
     async function loadInfo() {
@@ -48,7 +67,27 @@ const Order = () => {
 
     }
     loadInfo();
-  },[]);
+  }, []);
+
+  useEffect(() => {
+    async function loadProducts() {
+      await api.get('/category/product', {
+        params: {
+          category_id: categorySelected.id
+        }
+      }).then((response) => {
+
+        setProducts(response.data);
+        setProductSelected(response.data[0]);
+        console.log(response.data);
+      }).catch((error) => {
+        console.log(error);
+      });
+
+    }
+
+    loadProducts();
+  },[categorySelected]);
 
   const handleCloseOrder = async () => {
     try {
@@ -64,6 +103,15 @@ const Order = () => {
     }
   };
 
+
+  const handleChangeCategory = (item: CategoryProps) => {
+    setCategorySelected(item);
+  };
+
+  const handleChangeProduct = (product: ProductProps) => {
+    setProductSelected(product);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -74,14 +122,22 @@ const Order = () => {
       </View>
 
       {category.length !== 0 && (
-        <TouchableOpacity style={styles.input} onPress={ () => setModalCategoryVisible(true)}>
+        <TouchableOpacity
+          style={styles.input}
+          onPress={() => setModalCategoryVisible(true)}
+        >
           <Text>{categorySelected?.name}</Text>
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.input}>
-        <Text>Pizza de calumbresa</Text>
-      </TouchableOpacity>
+      {products.length !== 0 && (
+        <TouchableOpacity
+          style={styles.input}
+          onPress={() => setModalProductVisible(true)}
+        >
+          <Text>{productSelected?.name}</Text>
+        </TouchableOpacity>
+      )}
 
       <View style={styles.qtdContainer}>
         <Text style={styles.qtdText}>Quantidade</Text>
@@ -100,23 +156,42 @@ const Order = () => {
           <Text style={[styles.buttonText, { color: '#FFF' }]}>+</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={[styles.button,{opacity: items.length === 0 ? .3 : 1}]}
+          disabled={items.length === 0}
+        >
           <Text style={styles.buttonText}>Avançar</Text>
         </TouchableOpacity>
       </View>
 
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        style={{flex: 1, marginTop: 24}}
+      />
+
       <Modal
         transparent={true}
         visible={modalCategoryVisible}
-        animationType='fade'
+        animationType="fade"
       >
         <ModalPicker
           handleCloseModal={() => setModalCategoryVisible(false)}
           options={category}
-          selectedItem ={() => {}}
+          selectedItem={handleChangeCategory}
         />
       </Modal>
 
+      <Modal
+        transparent={true}
+        visible={modalProductVisible}
+        animationType="fade"
+      >
+        <ModalPicker
+          handleCloseModal={() => setModalProductVisible(false)}
+          options={products}
+          selectedItem={handleChangeProduct}
+        />
+      </Modal>
     </View>
   );
 };
