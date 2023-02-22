@@ -10,9 +10,7 @@ import {
 } from 'react-native';
 import { AuthContext } from '../../contexts/AuthContext';
 
-type Props = {}
-
-const SignIn = (props: Props) => {
+const SignIn = () => {
 
   const { signIn, loadingAuth, error } = useContext(AuthContext);
 
@@ -21,7 +19,7 @@ const SignIn = (props: Props) => {
 
   async function handleLogin() {
     if (email === '' || password === '') {
-      return;     
+      return;
     }
 
     await signIn({ email, password });
@@ -42,7 +40,7 @@ const SignIn = (props: Props) => {
           value={email}
           onChangeText={setEmail}
         />
-        
+
         <TextInput
           placeholder="Digite sua senha"
           style={styles.input}
@@ -52,22 +50,22 @@ const SignIn = (props: Props) => {
           onChangeText={setPassword}
         />
       </View>
-      
+
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         {loadingAuth ? (
           <ActivityIndicator size={25} color="#FFF"/>
         ) : (
-          <Text style={styles.buttonText}>Acessar</Text>    
+          <Text style={styles.buttonText}>Acessar</Text>
         )}
-        
+
       </TouchableOpacity>
 
       {
         error && <Text style={styles.error}>{error}</Text>
       }
     </View>
-  )
-}
+  );
+};
 
 
 const styles = StyleSheet.create({
@@ -116,6 +114,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color: '#FFF'
   }
-})
+});
 
 export default SignIn;

@@ -1,8 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation,RouteProp, useRoute } from '@react-navigation/native';
-
-
+import { api } from '../../services/api';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StackParamsList} from '../../routes/app.routes';
 type RouteDetailParams = {
   FinishOrder: {
     table: number | string;
@@ -15,10 +16,17 @@ type FinishOrderRouteProp = RouteProp<RouteDetailParams, 'FinishOrder'>;
 const FinishOrder = () => {
   const route = useRoute<FinishOrderRouteProp>();
 
-  console.log(route.params.table);
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>();
 
-  const handleFinish = () => {
-    alert('clicou');
+  const handleFinish = async () => {
+    try {
+      await api.patch('/order/send', {
+        id: route.params?.order_id,
+      });
+      navigation.popToTop();
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <View style={styles.container}>
