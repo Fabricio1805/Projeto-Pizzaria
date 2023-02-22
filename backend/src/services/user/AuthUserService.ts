@@ -34,18 +34,22 @@ class AuthUserService{
     // Se deu tudo certo vamos gerar o token pro usuario.
     const token = sign(
       {
-        id: user.id
+        id: user.id,
+        name: user.name,
+        email: user.email,
       },
-      process.env.JWT_SECRET || '',
+      process.env.JWT_SECRET,
       {
         subject: user.id,
         expiresIn: '30d'
       }
     );
-    const { password: _, ...userLogin } = user;
+    //const { password: _, ...userLogin } = user;
 
     return {
-      user: userLogin,
+      id: user.id,
+      name: user.name,
+      email: user.email,
       token: token
     };
   }

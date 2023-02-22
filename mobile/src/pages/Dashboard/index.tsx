@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,8 +7,21 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-const Dashboard = () => {
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackParamsList } from '../../routes/app.routes';
 
+const Dashboard = () => {
+  const [table, setTable] = useState('');
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamsList >>();
+
+  const openOrder = () => {
+    if (table === '') {
+      return;
+    }
+    navigation.navigate('Order',{table, order_id: 'dsadasd'});
+    
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Novo Pedido</Text>
@@ -18,11 +31,17 @@ const Dashboard = () => {
         placeholderTextColor="#1D1D2E"
         style={styles.input}
         keyboardType='numeric'
-      />
+        value={table}
+        onChangeText={setTable}
+     />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={openOrder}
+      > 
         <Text style={styles.buttonText}>Abrir mesa</Text>
       </TouchableOpacity>
+
     </SafeAreaView>
   )
 }

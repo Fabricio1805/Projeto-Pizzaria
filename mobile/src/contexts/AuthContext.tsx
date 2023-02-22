@@ -9,6 +9,7 @@ type AuthContextData = {
     loadingAuth: boolean;
     loading: boolean;
     signOut: () => Promise<void>;
+    error: string;
 };
 
 type UserProps = {
@@ -38,9 +39,10 @@ export function AuthProvider({children}: AuthProviderProps) {
 
     const [loadingAuth, setLoadingAuth] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     const isAuthenticated = !!user.name;
-
+    
     useEffect(() => {
         async function getUser() {
             const userInfo = await AsyncStorage.getItem('@sujeitopizzaria');
@@ -58,7 +60,9 @@ export function AuthProvider({children}: AuthProviderProps) {
             };
             setLoading(false);
         };
-    });
+
+        getUser();
+    },[]);
 
     async function signIn({ email, password }: SignInProps) {
         setLoadingAuth(true);
@@ -68,8 +72,11 @@ export function AuthProvider({children}: AuthProviderProps) {
                 email,
                 password,
             });    
-            console.log(response.data);
-            /*const { id, name, token } = response.data;
+            
+            const { id, name, token } = response.data;
+
+            console.log(response.data)
+        
             const data = {
                 ...response.data
             };
@@ -77,22 +84,21 @@ export function AuthProvider({children}: AuthProviderProps) {
             await AsyncStorage.setItem('@sujeitopizzaria', JSON.stringify(data));
 
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+            console.log(name)
             setUser({
                 id,
                 name,
                 email,
                 token,
             });
-            setLoadingAuth(false);*/
-        
-        } catch (error) {
-
-            console.error('Erro ao acessar', error);
             setLoadingAuth(false);
+            setError('');
+        } catch (error) {
+            setLoadingAuth(false);
+            setError('Erro ao acessar o APP!');
+            
         }   
-        console.log(email);
-        console.log(password)
+
     };
 
     async function signOut() {
@@ -114,7 +120,8 @@ export function AuthProvider({children}: AuthProviderProps) {
                 signIn,
                 loading,
                 loadingAuth,
-                signOut
+                signOut,
+                error
             }}>
             {children}
         </AuthContext.Provider>

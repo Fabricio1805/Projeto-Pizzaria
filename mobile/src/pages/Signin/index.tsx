@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ type Props = {}
 
 const SignIn = (props: Props) => {
 
-  const { signIn, loadingAuth } = useContext(AuthContext);
+  const { signIn, loadingAuth, error } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,6 +34,7 @@ const SignIn = (props: Props) => {
       />
 
       <View style={styles.inputContainer}>
+
         <TextInput
           placeholder="Digite seu email"
           style={styles.input}
@@ -41,6 +42,7 @@ const SignIn = (props: Props) => {
           value={email}
           onChangeText={setEmail}
         />
+        
         <TextInput
           placeholder="Digite sua senha"
           style={styles.input}
@@ -59,6 +61,10 @@ const SignIn = (props: Props) => {
         )}
         
       </TouchableOpacity>
+
+      {
+        error && <Text style={styles.error}>{error}</Text>
+      }
     </View>
   )
 }
@@ -102,19 +108,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#101026'
+  },
+  error: {
+    width: '95%',
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#FFF'
   }
 })
 
-
-
-
-
-
-
-
-
-
-
-
 export default SignIn;
-

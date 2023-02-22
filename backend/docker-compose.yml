@@ -1,55 +1,39 @@
-version: "3.5"
+version: "3"
 
 services:
-  api-node:
-    stdin_open: true
-    tty: true
+  app:
     build: .
-    container_name: server
-    env_file: .env
+    entrypoint: .docker/entrypoint.sh
+    container_name: apivendas-app
     ports:
       - "3001:3001"
+    expose:
+      - "3001"
     volumes:
       - .:/home/node/app
-    networks:
-      - app-network
     depends_on:
-      - db-mysql
-    restart: always
+      - db
 
-  db-mysql:
-    image: mysql:8.0.21
+  db:
+    build: .docker/postgres
+    container_name: apivendas-db
     restart: always
-    container_name: MYSQL
-    environment:
-      MYSQL_DATABASE: "api"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "root"
-      MYSQL_ROOT_PASSWORD: "root"
-      TZ: "America/Sao_Paulo"
+    tty: true
     ports:
       - "3306:3306"
-    expose:
-      - "3306"
     volumes:
-      - dbdata:/data/db
-    networks:
-      - app-network
-  db:
-    image: postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    expose:
-      - "5432"
+      - .docker/dbdata:/var/lib/mysql
     environment:
-      POSTGRES_USER: "docker"
-      POSTGRES_PASSWORD: "root"
-      POSTGRES_DB: "api"
-    volumes:
-      - .:/usr/app/postgres
-networks:
-  app-network:
-    driver: 'bridge'
-volumes:
-  dbdata:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=api
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: apivendas-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8000:80"
+    depends_on:
+      - db

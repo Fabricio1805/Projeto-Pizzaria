@@ -1,17 +1,7 @@
-FROM node:18.0-alpine3.15
-WORKDIR /usr/app
+FROM node:18.14.0-alpine3.17
 
+RUN apk add --no-cache bash
 
-COPY ["package.json", "package-lock.json*", "./"]
-COPY prisma ./prisma/
-COPY .env ./
-COPY tsconfig.json ./
-COPY . .
-RUN yarn
-RUN npx prisma generate
+USER node
 
-
-EXPOSE 3001
-
-
-CMD yarn dev
+WORKDIR /home/node/app

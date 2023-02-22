@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const Routes = () => {
   const { isAuthenticated, loading } = useContext(AuthContext);
-
+  
   if (loading) {
     return (
       <View style={{
@@ -19,9 +19,10 @@ const Routes = () => {
       </View>
     )
   }
+
   return (
     isAuthenticated ? <AppRoutes/> : <AuthRoutes/>
   )
 }
 
-export default Routes
+export default Routes;
