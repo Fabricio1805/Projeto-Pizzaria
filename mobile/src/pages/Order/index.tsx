@@ -13,6 +13,7 @@ import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { api } from '../../services/api';
 import ModalPicker from '../../components/ModalPicker';
+import ListItem from '../../components/ListItem';
 
 type RouteDetailParams = {
   Order: {
@@ -55,39 +56,40 @@ const Order = () => {
   const [productSelected, setProductSelected] = useState<ProductProps | null>();
   const [modalProductVisible, setModalProductVisible] = useState(false);
 
-
   useEffect(() => {
     async function loadInfo() {
-      await api.get('/categories').then(response => {
-        setCategory(response.data);
-        setCategorySelected(response.data[0]);
-      }).catch((error) => {
-        console.log(error);
-      });
-
+      await api
+        .get('/categories')
+        .then((response) => {
+          setCategory(response.data);
+          setCategorySelected(response.data[0]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     loadInfo();
   }, []);
 
   useEffect(() => {
     async function loadProducts() {
-      await api.get('/category/product', {
-        params: {
-          category_id: categorySelected.id
-        }
-      }).then((response) => {
-
-        setProducts(response.data);
-        setProductSelected(response.data[0]);
-        console.log(response.data);
-      }).catch((error) => {
-        console.log(error);
-      });
-
+      await api
+        .get('/category/product', {
+          params: {
+            category_id: categorySelected.id,
+          },
+        })
+        .then((response) => {
+          setProducts(response.data);
+          setProductSelected(response.data[0]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
 
     loadProducts();
-  },[categorySelected]);
+  }, [categorySelected]);
 
   const handleCloseOrder = async () => {
     try {
@@ -98,27 +100,46 @@ const Order = () => {
       });
 
       navigation.goBack();
-    } catch(err) {
-      console.log('Erro ao cancelar pedido!'+err);
+    } catch (err) {
+      console.log('Erro ao cancelar pedido!' + err);
     }
   };
 
-
+  // trocando a categoria
   const handleChangeCategory = (item: CategoryProps) => {
     setCategorySelected(item);
   };
 
+  // trocando o produto
   const handleChangeProduct = (product: ProductProps) => {
     setProductSelected(product);
+  };
+  // adicionando item a mesa
+  const handleAddItem = async () => {
+    const response = await api.post('/item', {
+      order_id: route.params.order_id,
+      product_id: productSelected.id,
+      amount: Number(amount)
+    });
+    const data = {
+      id: response.data.id,
+      product_id: productSelected?.id,
+      name: productSelected?.name,
+      amount
+    };
+
+    setItems(oldArray => [...oldArray, data]);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Mesa {route.params.table}</Text>
-        <TouchableOpacity onPress={handleCloseOrder}>
-          <Feather name="trash" size={26} color="#FF3F4b" />
-        </TouchableOpacity>
+        {items.length === 0 && (
+          <TouchableOpacity onPress={handleCloseOrder}>
+            <Feather name="trash" size={26} color="#FF3F4b" />
+          </TouchableOpacity>
+        )}
       </View>
 
       {category.length !== 0 && (
@@ -152,12 +173,12 @@ const Order = () => {
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.buttonAdd}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={handleAddItem}>
           <Text style={[styles.buttonText, { color: '#FFF' }]}>+</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button,{opacity: items.length === 0 ? .3 : 1}]}
+          style={[styles.button, { opacity: items.length === 0 ? 0.3 : 1 }]}
           disabled={items.length === 0}
         >
           <Text style={styles.buttonText}>Avançar</Text>
@@ -166,7 +187,10 @@ const Order = () => {
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        style={{flex: 1, marginTop: 24}}
+        style={{ flex: 1, marginTop: 24 }}
+        data={items}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ListItem data={item} />}
       />
 
       <Modal
