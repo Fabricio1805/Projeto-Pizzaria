@@ -22,9 +22,14 @@ Foi desenvolvido no curso do sujeito programador - Udemy
 
 ## Layout web
 
-![web_list_orders](https://github.com/Fabricio1805/projeto-restaurante/blob/main/assets/list_orders.png)
+![web_login](https://github.com/Fabricio1805/Projeto-Pizzaria/blob/main/assets/login.png)
 
-![web_details_order](https://github.com/Fabricio1805/projeto-restaurante/blob/main/assets/details_order.png)
+![web_register](https://github.com/Fabricio1805/Projeto-Pizzaria/blob/main/assets/tela_cadastro.png)
+
+![web_category](https://github.com/Fabricio1805/Projeto-Pizzaria/blob/main/assets/category.png)
+
+![web_product](https://github.com/Fabricio1805/Projeto-Pizzaria/blob/main/assets/produto.png)
+
 
 
 # Tecnologias utilizadas
@@ -33,12 +38,14 @@ Foi desenvolvido no curso do sujeito programador - Udemy
 ## Back end
  - Node js
  - Typescript
- - mongo
+ - postgresql
  - Express 
+ - docker
+ - docker-compose
 
 ## front end
   - React
-  - styled-components
+  - style sheet
   - react-icons
   - react-toastify
   - axios
@@ -47,7 +54,6 @@ Foi desenvolvido no curso do sujeito programador - Udemy
   - React Native
   - Expo
   - axios
-  - styled-components
 
 # Como executar o projeto
 ## Back end
