@@ -57,22 +57,16 @@ Foi desenvolvido no curso do sujeito programador - Udemy
 
 # Como executar o projeto
 ## Back end
-pre-requesito: node js | mongo
+pre-requesito: docker
 ```bash
  # Clonar o repositório
- git clone https://github.com/Fabricio1805/projeto-restaurante.git
+ git clone https://github.com/Fabricio1805/Projeto-Pizzaria.git
  
  # Entrar na pasta do projeto
- cd projeto-restaurante 
+ cd Projeto-Pizzaria 
  
- # Entrar na pasta do projeto backend
- cd backend
- 
- # Instalar as dependências
- yarn
- 
- # Executar o projeto
- yarn dev
+ # Executar o comando docker
+ docker-compose up
 ```
 
 ## Front end
@@ -81,10 +75,10 @@ Pré-requisitos: npm / yarn
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/Fabricio1805/projeto-restaurante.git
+git clone https://github.com/Fabricio1805/Projeto-Pizzaria.git
 
 # Entrar na pasta do projeto
-cd projeto-restaurante
+cd Projeto-Pizzaria
 
 # Entrar na pasta do projeto front end
 cd frontend
@@ -102,10 +96,10 @@ Pré-requisitos: expo
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/Fabricio1805/projeto-restaurante.git
+git clone https://github.com/Fabricio1805/Projeto-Pizzaria.git
 
 # Entrar na pasta do projeto
-cd projeto-restaurante
+cd Projeto-Pizzaria
 
 # Entrar na pasta do projeto front end
 cd mobile
